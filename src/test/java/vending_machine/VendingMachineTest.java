@@ -1,8 +1,11 @@
 package vending_machine;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,5 +41,17 @@ class VendingMachineTest {
         VendingMachine machine = new VendingMachine();
 
         assertThatThrownBy(() -> machine.putMoney(money)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("상품 리스트로 자판기를 생성한다.")
+    void createWithProducts() {
+        List<VendingMachineProduct> products = List.of(
+            new VendingMachineProduct("product1", 700),
+            new VendingMachineProduct("product2", 800)
+        );
+        VendingMachine machine = new VendingMachine(products);
+
+        assertThat(machine.getProducts()).isEqualTo(products);
     }
 }
