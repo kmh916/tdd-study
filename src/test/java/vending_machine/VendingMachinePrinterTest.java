@@ -35,7 +35,7 @@ public class VendingMachinePrinterTest {
         VendingMachinePrinter printer = new VendingMachinePrinter(machine);
 
         printer.printBalance();
-        assertThat(outContent.toString()).isEqualTo(String.format(VendingMachinePrinter.BALANCE_FORMAT, machine.getBalance()));
+        assertThat(outContent.toString()).isEqualTo(String.format(VendingMachinePrinter.BALANCE_FORMAT + "\n", machine.getBalance()));
     }
 
     private VendingMachine getMachine(int money) {
