@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class VendingMachineTest {
+class VendingMachineTest {
     @ParameterizedTest
     @ValueSource(ints = {100, 500, 1000, 5000, 10000})
     @DisplayName("자판기에 금액 투입시 정상 금액일 경우 자판기 잔액이 증가한다")
@@ -15,7 +15,7 @@ public class VendingMachineTest {
         VendingMachine machine = new VendingMachine();
         machine.putMoney(money);
 
-        assertThat(vendingMachine.getBalance()).isEqualTo(money);
+        assertThat(machine.getBalance()).isEqualTo(money);
     }
 
     @ParameterizedTest
@@ -28,7 +28,7 @@ public class VendingMachineTest {
         machine.putMoney(balance);
         machine.putMoney(money);
 
-        assertThat(vendingMachine.getBalance()).isEqualTo(money + balance);
+        assertThat(machine.getBalance()).isEqualTo(money + balance);
     }
 
     @ParameterizedTest
