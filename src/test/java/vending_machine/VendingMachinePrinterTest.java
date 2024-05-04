@@ -9,22 +9,24 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class VendingMachinePrinterTest {
+class VendingMachinePrinterTest {
 
-    private static final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private static final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private ByteArrayOutputStream outContent;
+    private ByteArrayOutputStream errContent;
 
     private static final PrintStream originalOut = System.out;
     private static final PrintStream originalErr = System.err;
 
-    @BeforeAll
-    public static void setUpStreams() {
+    @BeforeEach
+    public void setUpStreams() {
+        outContent = new ByteArrayOutputStream();
+        errContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
     }
 
-    @AfterAll
-    public static void restoreStreams() {
+    @AfterEach
+    public void restoreStreams() {
         System.setOut(originalOut);
         System.setErr(originalErr);
     }
@@ -37,17 +39,17 @@ public class VendingMachinePrinterTest {
         VendingMachinePrinter printer = new VendingMachinePrinter(machine);
 
         printer.printBalance();
-        assertThat(outContent.toString()).isEqualTo(String.format(VendingMachinePrinter.BALANCE_FORMAT + "\n", machine.getBalance()));
+        assertThat(outContent).hasToString(String.format(VendingMachinePrinter.BALANCE_FORMAT + "\n", machine.getBalance()));
     }
 
     @Test
     @DisplayName("자판기에 상품이 없는 경우 '자판기에 상품이 없습니다.' 메시지가 출력된다. ")
-    void printProducts() {
+    void printEmptyProducts() {
         VendingMachinePrinter vendingMachinePrinter = new VendingMachinePrinter(getMachine(10000));
 
         vendingMachinePrinter.printProducts();
 
-        assertThat(outContent.toString()).isEqualTo(VendingMachinePrinter.PRODUCTS_EMPTY_MESSAGE + "\n");
+        assertThat(outContent.toString()).hasToString(VendingMachinePrinter.PRODUCTS_EMPTY_MESSAGE + "\n");
 
     }
 
