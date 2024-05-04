@@ -20,4 +20,9 @@ public class VendingMachineProduct {
     public int getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return this.name + " - " + price + "원";
+    }
 }
