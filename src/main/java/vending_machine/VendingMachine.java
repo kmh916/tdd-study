@@ -1,12 +1,29 @@
 package vending_machine;
 
+import vending_machine.product.VendingMachineProduct;
+
+import java.util.Collections;
 import java.util.List;
 
 public class VendingMachine {
     private int balance;
 
+    private final List<VendingMachineProduct> products;
+
+    public VendingMachine() {
+        this.products = Collections.emptyList();
+    }
+
+    public VendingMachine(List<VendingMachineProduct> products) {
+        this.products = products;
+    }
+
     public int getBalance() {
         return this.balance;
+    }
+
+    public List<VendingMachineProduct> getProducts() {
+        return products;
     }
 
     public void putMoney(int money) {
