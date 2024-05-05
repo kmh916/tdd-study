@@ -33,6 +33,18 @@ public class VendingMachine {
         this.balance += money;
     }
 
+    public VendingMachineProduct order(String selectedProductName) {
+        VendingMachineProduct product = products.stream()
+            .filter(i -> i.getName().equals(selectedProductName))
+            .findFirst()
+            .orElseThrow(IllegalArgumentException::new);
+
+        if (this.balance >= product.getPrice()) {
+            return product;
+        }
+        throw new IllegalStateException();
+    }
+
     private boolean validateMoney(int money) {
         return List.of(100, 500, 1000, 5000, 10000).contains(money);
     }
