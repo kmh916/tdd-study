@@ -4,18 +4,27 @@ import vending_machine.product.VendingMachineProduct;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class VendingMachine {
     private int balance;
 
-    private final List<VendingMachineProduct> products;
+    private final Map<String, VendingMachineProduct> products;
 
     public VendingMachine() {
-        this.products = Collections.emptyList();
+        this.products = Collections.emptyMap();
     }
 
     public VendingMachine(List<VendingMachineProduct> products) {
-        this.products = products;
+        this.products = products.stream()
+            .collect(
+                Collectors.toMap(
+                    VendingMachineProduct::getName,
+                    Function.identity()
+                )
+            );
     }
 
     public int getBalance() {
@@ -23,7 +32,9 @@ public class VendingMachine {
     }
 
     public List<VendingMachineProduct> getProducts() {
-        return products;
+        return this.products.values()
+            .stream()
+            .toList();
     }
 
     public void putMoney(int money) {
@@ -34,10 +45,11 @@ public class VendingMachine {
     }
 
     public VendingMachineProduct order(String selectedProductName) {
-        VendingMachineProduct product = products.stream()
-            .filter(i -> i.getName().equals(selectedProductName))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+        VendingMachineProduct product = this.products.get(selectedProductName);
+
+        if (product == null) {
+            throw new IllegalArgumentException();
+        }
 
         if (this.balance >= product.getPrice()) {
             return product;

@@ -54,7 +54,7 @@ class VendingMachineTest {
         );
         VendingMachine machine = new VendingMachine(products);
 
-        assertThat(machine.getProducts()).isEqualTo(products);
+        assertThat(machine.getProducts()).hasSameElementsAs(products);
     }
 
     @Nested

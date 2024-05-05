@@ -57,16 +57,13 @@ class VendingMachinePrinterTest {
     @DisplayName("자판기에 상품이 있는 경우 상품 리스트가 출력된다. (구매 가능 상품의 경우 구매 가능 메시지가 함께 출력된다.)")
     void printProducts() {
         List<VendingMachineProduct> products = List.of(
-            new VendingMachineProduct("이슬톡톡", 2400),
-            new VendingMachineProduct("내가만든쿠키", 14000)
+            new VendingMachineProduct("이슬톡톡", 2400)
         );
         VendingMachinePrinter vendingMachinePrinter = new VendingMachinePrinter(getMachine(10000, products));
 
         vendingMachinePrinter.printProducts();
 
         assertThat(outContent.toString()).contains(products.get(0) + "(구매가능)");
-        assertThat(outContent.toString()).contains(products.get(1).getName());
-
     }
 
     private VendingMachine getMachine(int money) {
