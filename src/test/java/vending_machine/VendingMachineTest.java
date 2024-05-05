@@ -1,6 +1,7 @@
 package vending_machine;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -54,5 +55,52 @@ class VendingMachineTest {
         VendingMachine machine = new VendingMachine(products);
 
         assertThat(machine.getProducts()).isEqualTo(products);
+    }
+
+    @Nested
+    @DisplayName("상품을 선택하면")
+    class B {
+
+        final String selectedProductName = "아메리카노";
+
+        final VendingMachineProduct product = new VendingMachineProduct(selectedProductName, 5000);
+
+        @Test
+        @DisplayName("잔액이 상품가격 이상일경우 상품을 반환한다.")
+        void returnProductWhenBalanceGreaterOrEqualProductPrice() {
+            int money = 10000;
+
+            VendingMachine machine = new VendingMachine(
+                List.of(product)
+            );
+            machine.putMoney(money);
+
+            assertThat(machine.order(selectedProductName)).isEqualTo(product);
+        }
+
+        @Test
+        @DisplayName("잔액이 상품가격 미만일경우 IllegalStateException 을 던진다.")
+        void throwIllegalStateExceptionWhenBalanceLessThanProductPrice() {
+            int money = 500;
+            VendingMachine machine = new VendingMachine(
+                List.of(product)
+            );
+            machine.putMoney(money);
+
+            assertThatThrownBy(() -> machine.order(selectedProductName)).isInstanceOf(IllegalStateException.class);
+        }
+
+        @Test
+        @DisplayName("해당 상품이 없을경우 IllegalArgumentException 을 던진다.")
+        void throwIllegalArgumentExceptionWhenProductNotExists() {
+            int money = 5000;
+            VendingMachineProduct p = new VendingMachineProduct("삼다수", 1000);
+            VendingMachine machine = new VendingMachine(
+                List.of(p)
+            );
+            machine.putMoney(money);
+
+            assertThatThrownBy(() -> machine.order(selectedProductName)).isInstanceOf(IllegalArgumentException.class);
+        }
     }
 }
