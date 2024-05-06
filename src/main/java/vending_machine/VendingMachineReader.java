@@ -21,7 +21,13 @@ public class VendingMachineReader {
     }
 
     public void readProductName() {
-        Optional<VendingMachineProduct> product = machine.order(scanner.nextLine());
+        Optional<VendingMachineProduct> product;
+        try {
+            product = machine.order(scanner.nextLine());
+        } catch (IllegalStateException e) {
+            printer.printNotEnoughMoney();
+            return;
+        }
         printer.printOrderEvent(product);
     }
 }

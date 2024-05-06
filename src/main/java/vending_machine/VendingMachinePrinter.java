@@ -22,6 +22,8 @@ public class VendingMachinePrinter {
 
     public static final String ORDER_FAIL_MESSAGE = "해당 상품이 없습니다.";
 
+    public static final String NOT_ENOUGH_MONEY_FORMAT = "잔액이 부족합니다 현재 잔액 : %s원";
+
     public VendingMachinePrinter(VendingMachine machine, PrintStream out) {
         this.machine = machine;
         this.printer = out;
@@ -52,5 +54,9 @@ public class VendingMachinePrinter {
             p -> this.printer.printf(ORDER_SUCCESS_FORMAT + "\n", p.getName()),
             () -> this.printer.println(ORDER_FAIL_MESSAGE)
         );
+    }
+
+    public void printNotEnoughMoney() {
+        this.printer.printf(NOT_ENOUGH_MONEY_FORMAT + "\n", this.machine.getBalance());
     }
 }
