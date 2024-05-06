@@ -2,8 +2,8 @@ package vending_machine;
 
 import vending_machine.product.VendingMachineProduct;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class VendingMachineReader {
@@ -21,7 +21,7 @@ public class VendingMachineReader {
     }
 
     public void readProductName() {
-        VendingMachineProduct product = machine.order(scanner.nextLine());
-        printer.onOrderSuccess(product);
+        Optional<VendingMachineProduct> product = machine.order(scanner.nextLine());
+        printer.printOrderEvent(product);
     }
 }

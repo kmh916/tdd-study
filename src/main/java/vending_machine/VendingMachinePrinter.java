@@ -4,6 +4,7 @@ import vending_machine.product.VendingMachineProduct;
 
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Optional;
 
 public class VendingMachinePrinter {
 
@@ -47,7 +48,12 @@ public class VendingMachinePrinter {
 
     }
 
-    public void onOrderSuccess(VendingMachineProduct product) {
-        this.printer.printf("%s이 출력 되었습니다.\n", product.getName());
+    public void printOrderEvent(Optional<VendingMachineProduct> product) {
+        product.ifPresentOrElse(
+            p -> this.printer.printf("%s이 출력 되었습니다.\n", p.getName()),
+            () -> System.out.println("해당 상품이 없습니다.")
+        );
+
+
     }
 }

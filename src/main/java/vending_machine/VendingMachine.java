@@ -5,6 +5,7 @@ import vending_machine.product.VendingMachineProduct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,15 +45,15 @@ public class VendingMachine {
         this.balance += money;
     }
 
-    public VendingMachineProduct order(String selectedProductName) {
+    public Optional<VendingMachineProduct> order(String selectedProductName) {
         VendingMachineProduct product = this.products.get(selectedProductName);
 
         if (product == null) {
-            throw new IllegalArgumentException();
+            return Optional.empty();
         }
 
         if (this.balance >= product.getPrice()) {
-            return product;
+            return Optional.of(product);
         }
         throw new IllegalStateException();
     }
