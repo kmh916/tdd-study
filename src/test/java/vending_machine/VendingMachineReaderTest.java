@@ -36,4 +36,21 @@ class VendingMachineReaderTest {
         verify(machine).order(product1.getName());
         verify(printer).printOrderEvent(product);
     }
+
+    @Test
+    @DisplayName("상품 선택시 잔액이 부족하다면 VendingMachinePrinter.printNotEnoughMoney 을 호출한다. ")
+    void readFail() {
+        Mockito.when(machine.order(any())).thenThrow(IllegalStateException.class);
+        String selectedProductName = "이슬톡톡";
+        VendingMachineReader reader = new VendingMachineReader(
+            printer,
+            machine,
+            new ByteArrayInputStream(selectedProductName.getBytes())
+        );
+
+        reader.readProductName();
+
+        verify(machine).order(product1.getName());
+        verify(printer).printNotEnoughMoney();
+    }
 }

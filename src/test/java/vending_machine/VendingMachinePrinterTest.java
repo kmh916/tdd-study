@@ -92,6 +92,16 @@ class VendingMachinePrinterTest extends OutputTest {
             assertThat(output.toString()).isEqualTo(VendingMachinePrinter.ORDER_FAIL_MESSAGE + "\n");
         }
 
+        @Test
+        @DisplayName("잔액이 충분하지 않다면 '잔액이 부족합니다 현재 잔액 : (잔액)원' 메시지를 출력한다.")
+        void onNotEnoughMoney() {
+            VendingMachinePrinter printer = getPrinter(getMachine(1000));
+
+            printer.printNotEnoughMoney();
+
+            assertThat(output.toString()).isEqualTo(String.format(VendingMachinePrinter.NOT_ENOUGH_MONEY_FORMAT + "\n", 1000));
+        }
+
     }
 
     private VendingMachinePrinter getPrinter(VendingMachine machine) {
