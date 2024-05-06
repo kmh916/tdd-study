@@ -2,11 +2,14 @@ package vending_machine;
 
 import vending_machine.product.VendingMachineProduct;
 
+import java.io.PrintStream;
 import java.util.List;
 
 public class VendingMachinePrinter {
 
     private final VendingMachine machine;
+
+    private final PrintStream printer;
 
     public static final String BALANCE_FORMAT = "잔액 : %s";
 
@@ -16,24 +19,30 @@ public class VendingMachinePrinter {
 
     public VendingMachinePrinter(VendingMachine machine) {
         this.machine = machine;
+        this.printer = System.out;
+    }
+
+    public VendingMachinePrinter(VendingMachine machine, PrintStream out) {
+        this.machine = machine;
+        this.printer = out;
     }
 
     public void printBalance() {
-        System.out.println(String.format(BALANCE_FORMAT, machine.getBalance()));
+        this.printer.println(String.format(BALANCE_FORMAT, machine.getBalance()));
     }
 
     public void printProducts() {
         List<VendingMachineProduct> products = this.machine.getProducts();
         if (products.isEmpty()) {
-            System.out.println(PRODUCTS_EMPTY_MESSAGE);
+            this.printer.println(PRODUCTS_EMPTY_MESSAGE);
             return;
         }
 
-        System.out.println(PRODUCTS_HEADER);
+        this.printer.println(PRODUCTS_HEADER);
         for (int i = 0; i < products.size(); i++) {
             VendingMachineProduct product = products.get(i);
             String ableMessage = product.getPrice() <= this.machine.getBalance() ? "(구매가능)" : "";
-            System.out.printf("%s : %s%s\n", (i + 1), product, ableMessage);
+            this.printer.printf("%s : %s%s\n", (i + 1), product, ableMessage);
         }
 
     }

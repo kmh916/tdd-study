@@ -12,23 +12,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class VendingMachinePrinterTest {
 
     private ByteArrayOutputStream outContent;
-    private ByteArrayOutputStream errContent;
 
     private static final PrintStream originalOut = System.out;
-    private static final PrintStream originalErr = System.err;
 
     @BeforeEach
     public void setUpStreams() {
         outContent = new ByteArrayOutputStream();
-        errContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
-    }
-
-    @AfterEach
-    public void restoreStreams() {
-        System.setOut(originalOut);
-        System.setErr(originalErr);
     }
 
     @Test
@@ -36,7 +25,7 @@ class VendingMachinePrinterTest {
     void printBalance() {
         int money = 1000;
         VendingMachine machine = getMachine(money);
-        VendingMachinePrinter printer = new VendingMachinePrinter(machine);
+        VendingMachinePrinter printer = getPrinter(machine);
 
         printer.printBalance();
         assertThat(outContent).hasToString(String.format(VendingMachinePrinter.BALANCE_FORMAT + "\n", machine.getBalance()));
@@ -45,7 +34,7 @@ class VendingMachinePrinterTest {
     @Test
     @DisplayName("자판기에 상품이 없는 경우 '자판기에 상품이 없습니다.' 메시지가 출력된다. ")
     void printEmptyProducts() {
-        VendingMachinePrinter vendingMachinePrinter = new VendingMachinePrinter(getMachine(10000));
+        VendingMachinePrinter vendingMachinePrinter = getPrinter(getMachine(10000));
 
         vendingMachinePrinter.printProducts();
 
@@ -62,8 +51,7 @@ class VendingMachinePrinterTest {
         @Test
         @DisplayName("구매 가능 상품의 경우 '상품명 + (구매가능)' 이 출력된다.")
         void printProductsWhenAbleToBuy() {
-
-            VendingMachinePrinter vendingMachinePrinter = new VendingMachinePrinter(getMachine(10000, products));
+            VendingMachinePrinter vendingMachinePrinter = getPrinter(getMachine(10000, products));
 
             vendingMachinePrinter.printProducts();
 
@@ -73,13 +61,17 @@ class VendingMachinePrinterTest {
         @Test
         @DisplayName("구매 불가능 상품의 경우 '상품명' 이 출력된다.")
         void printProductsWhenUnAbleToBuy() {
-            VendingMachinePrinter vendingMachinePrinter = new VendingMachinePrinter(getMachine(1000, products));
+            VendingMachinePrinter vendingMachinePrinter = getPrinter(getMachine(1000, products));
 
             vendingMachinePrinter.printProducts();
 
             assertThat(outContent.toString()).contains(products.get(0).toString());
             assertThat(outContent.toString()).doesNotContain("구매가능");
         }
+    }
+
+    private VendingMachinePrinter getPrinter(VendingMachine machine) {
+        return new VendingMachinePrinter(machine, new PrintStream(outContent));
     }
 
     private VendingMachine getMachine(int money) {
