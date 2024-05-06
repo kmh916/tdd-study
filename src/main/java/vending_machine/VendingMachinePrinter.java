@@ -18,10 +18,9 @@ public class VendingMachinePrinter {
 
     public static final String PRODUCTS_HEADER = "<상품 목록>";
 
-    public VendingMachinePrinter(VendingMachine machine) {
-        this.machine = machine;
-        this.printer = System.out;
-    }
+    public static final String ORDER_SUCCESS_FORMAT = "%s이 출력 되었습니다.";
+
+    public static final String ORDER_FAIL_MESSAGE = "해당 상품이 없습니다.";
 
     public VendingMachinePrinter(VendingMachine machine, PrintStream out) {
         this.machine = machine;
@@ -50,10 +49,8 @@ public class VendingMachinePrinter {
 
     public void printOrderEvent(Optional<VendingMachineProduct> product) {
         product.ifPresentOrElse(
-            p -> this.printer.printf("%s이 출력 되었습니다.\n", p.getName()),
-            () -> System.out.println("해당 상품이 없습니다.")
+            p -> this.printer.printf(ORDER_SUCCESS_FORMAT + "\n", p.getName()),
+            () -> this.printer.println(ORDER_FAIL_MESSAGE)
         );
-
-
     }
 }
