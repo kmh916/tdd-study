@@ -46,4 +46,8 @@ public class VendingMachinePrinter {
         }
 
     }
+
+    public void onOrderSuccess(VendingMachineProduct product) {
+        this.printer.printf("%s이 출력 되었습니다.\n", product.getName());
+    }
 }
