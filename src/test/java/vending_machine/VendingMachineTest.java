@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import vending_machine.product.VendingMachineProduct;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -66,7 +67,7 @@ class VendingMachineTest {
         final VendingMachineProduct product = new VendingMachineProduct(selectedProductName, 5000);
 
         @Test
-        @DisplayName("해당 상품이 있고 잔액이 상품가격 이상일경우 Optional<상품>을 반환한다.")
+        @DisplayName("해당 상품이 있고 잔액이 상품가격 이상일경우 Optional<상품>을 반환하고 잔액이 감소한다.")
         void returnProductWhenBalanceGreaterOrEqualProductPrice() {
             int money = 10000;
 
@@ -75,7 +76,10 @@ class VendingMachineTest {
             );
             machine.putMoney(money);
 
-            assertThat(machine.order(selectedProductName).get()).isEqualTo(product);
+            Optional<VendingMachineProduct> result = machine.order(selectedProductName);
+
+            assertThat(result).contains(product);
+            assertThat(machine.getBalance()).isEqualTo(money - product.getPrice());
         }
 
         @Test

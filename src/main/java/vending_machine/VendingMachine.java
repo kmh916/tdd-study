@@ -53,6 +53,7 @@ public class VendingMachine {
         }
 
         if (this.balance >= product.getPrice()) {
+            this.balance -= product.getPrice();
             return Optional.of(product);
         }
         throw new IllegalStateException();
