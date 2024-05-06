@@ -7,6 +7,7 @@ import vending_machine.product.VendingMachineProduct;
 import java.io.PrintStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,6 +61,37 @@ class VendingMachinePrinterTest extends OutputTest {
             assertThat(output.toString()).contains(products.get(0).toString());
             assertThat(output.toString()).doesNotContain("구매가능");
         }
+    }
+
+    @Nested
+    @DisplayName("상품 주문시")
+    class PrintOrderEvent {
+        @Test
+        @DisplayName("상품이 정상적으로 주문되었다면 '(상품명)이 출력 되었습니다.'를 출력한다.")
+        void onSuccess() {
+            VendingMachinePrinter printer = getPrinter(getMachine(1000));
+
+            String productName = "이슬톡톡";
+            VendingMachineProduct p = new VendingMachineProduct(productName, 2400);
+            Optional<VendingMachineProduct> product = Optional.of(p);
+
+            printer.printOrderEvent(product);
+
+            assertThat(output.toString()).isEqualTo(String.format(VendingMachinePrinter.ORDER_SUCCESS_FORMAT + "\n", p.getName()));
+        }
+
+        @Test
+        @DisplayName("상품이 없다면 '해당 상품이 없습니다.'를 출력한다.")
+        void onNotFound() {
+            VendingMachinePrinter printer = getPrinter(getMachine(1000));
+
+            Optional<VendingMachineProduct> product = Optional.empty();
+
+            printer.printOrderEvent(product);
+
+            assertThat(output.toString()).isEqualTo(VendingMachinePrinter.ORDER_FAIL_MESSAGE + "\n");
+        }
+
     }
 
     private VendingMachinePrinter getPrinter(VendingMachine machine) {
