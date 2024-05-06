@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 import vending_machine.product.VendingMachineProduct;
 
 import java.io.ByteArrayInputStream;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -19,9 +20,10 @@ class VendingMachineReaderTest {
     VendingMachine machine = mock();
 
     @Test
-    @DisplayName("상품 선택시 해당 상품이 있을 경우 VendingMachine.order와 VendingMachinePrinter.onOrderSuccess를 호출한다.")
+    @DisplayName("상품 선택시 VendingMachine.order와 VendingMachinePrinter.printOrderEvent를 호출한다.")
     void readSuccess() {
-        Mockito.when(machine.order(any())).thenReturn(product1);
+        Optional<VendingMachineProduct> product = Optional.of(product1);
+        Mockito.when(machine.order(any())).thenReturn(product);
         String selectedProductName = "이슬톡톡";
         VendingMachineReader reader = new VendingMachineReader(
             printer,
@@ -32,6 +34,6 @@ class VendingMachineReaderTest {
         reader.readProductName();
 
         verify(machine).order(product1.getName());
-        verify(printer).onOrderSuccess(product1);
+        verify(printer).printOrderEvent(product);
     }
 }

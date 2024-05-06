@@ -66,7 +66,7 @@ class VendingMachineTest {
         final VendingMachineProduct product = new VendingMachineProduct(selectedProductName, 5000);
 
         @Test
-        @DisplayName("잔액이 상품가격 이상일경우 상품을 반환한다.")
+        @DisplayName("해당 상품이 있고 잔액이 상품가격 이상일경우 Optional<상품>을 반환한다.")
         void returnProductWhenBalanceGreaterOrEqualProductPrice() {
             int money = 10000;
 
@@ -75,7 +75,7 @@ class VendingMachineTest {
             );
             machine.putMoney(money);
 
-            assertThat(machine.order(selectedProductName)).isEqualTo(product);
+            assertThat(machine.order(selectedProductName).get()).isEqualTo(product);
         }
 
         @Test
@@ -91,7 +91,7 @@ class VendingMachineTest {
         }
 
         @Test
-        @DisplayName("해당 상품이 없을경우 IllegalArgumentException 을 던진다.")
+        @DisplayName("해당 상품이 없을경우 Optional.empty 를 반환한다.")
         void throwIllegalArgumentExceptionWhenProductNotExists() {
             int money = 5000;
             VendingMachineProduct p = new VendingMachineProduct("삼다수", 1000);
@@ -100,7 +100,7 @@ class VendingMachineTest {
             );
             machine.putMoney(money);
 
-            assertThatThrownBy(() -> machine.order(selectedProductName)).isInstanceOf(IllegalArgumentException.class);
+            assertThat(machine.order(selectedProductName).isEmpty()).isTrue();
         }
     }
 }
