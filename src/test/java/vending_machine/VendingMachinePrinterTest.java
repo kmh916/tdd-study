@@ -1,24 +1,16 @@
 package vending_machine;
 
 import org.junit.jupiter.api.*;
+import util.OutputTest;
 import vending_machine.product.VendingMachineProduct;
 
-import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class VendingMachinePrinterTest {
-
-    private ByteArrayOutputStream outContent;
-
-    private static final PrintStream originalOut = System.out;
-
-    @BeforeEach
-    public void setUpStreams() {
-        outContent = new ByteArrayOutputStream();
-    }
+class VendingMachinePrinterTest extends OutputTest {
 
     @Test
     @DisplayName("자판기의 잔액이 출력된다.")
@@ -28,7 +20,7 @@ class VendingMachinePrinterTest {
         VendingMachinePrinter printer = getPrinter(machine);
 
         printer.printBalance();
-        assertThat(outContent).hasToString(String.format(VendingMachinePrinter.BALANCE_FORMAT + "\n", machine.getBalance()));
+        assertThat(output).hasToString(String.format(VendingMachinePrinter.BALANCE_FORMAT + "\n", machine.getBalance()));
     }
 
     @Test
@@ -38,7 +30,7 @@ class VendingMachinePrinterTest {
 
         vendingMachinePrinter.printProducts();
 
-        assertThat(outContent.toString()).hasToString(VendingMachinePrinter.PRODUCTS_EMPTY_MESSAGE + "\n");
+        assertThat(output.toString()).hasToString(VendingMachinePrinter.PRODUCTS_EMPTY_MESSAGE + "\n");
 
     }
 
@@ -55,7 +47,7 @@ class VendingMachinePrinterTest {
 
             vendingMachinePrinter.printProducts();
 
-            assertThat(outContent.toString()).contains(products.get(0) + "(구매가능)");
+            assertThat(output.toString()).contains(products.get(0) + "(구매가능)");
         }
 
         @Test
@@ -65,19 +57,17 @@ class VendingMachinePrinterTest {
 
             vendingMachinePrinter.printProducts();
 
-            assertThat(outContent.toString()).contains(products.get(0).toString());
-            assertThat(outContent.toString()).doesNotContain("구매가능");
+            assertThat(output.toString()).contains(products.get(0).toString());
+            assertThat(output.toString()).doesNotContain("구매가능");
         }
     }
 
     private VendingMachinePrinter getPrinter(VendingMachine machine) {
-        return new VendingMachinePrinter(machine, new PrintStream(outContent));
+        return new VendingMachinePrinter(machine, new PrintStream(output));
     }
 
     private VendingMachine getMachine(int money) {
-        VendingMachine machine = new VendingMachine();
-        machine.putMoney(money);
-        return machine;
+        return getMachine(money, Collections.emptyList());
     }
 
     private VendingMachine getMachine(int money, List<VendingMachineProduct> products) {
